@@ -31,5 +31,5 @@
 *.out
 *.app
 
-# 
-ArrayTest.dSYM/
+# Debug symbols
+*.dSYM/
