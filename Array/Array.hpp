@@ -63,21 +63,6 @@ class Array {
         source.m_size{};
     }
 
-    // Assignment (deep copy)
-    // Array<T> operator = (Array<T>& source) {
-    //     m_ptr = new T[source.size];
-    //     for(int i{}; i < source.Size(); i++) {
-    //         m_ptr[i] = source.m_ptr[size];
-    //     }
-    // }
-
-    // Assignment (member-wise swap)
-    // Array<T> operator = (Array<T> source) {
-    //     using namespace std::swap;
-    //     swap(m_ptr, source.m_ptr);
-    //     swap(m_size, source.m_size);
-    // }
-
     // Assignment operator (via copy-and-swap idiom)
     Array<T>& operator = (Array<T> source){
         swap(*this, source);
@@ -142,3 +127,19 @@ inline std::ostream& operator << (std::ostream& os, const Array<T> source) {
 }
 
 #endif //ARRAY_HPP_INCLUDED
+
+
+    // Assignment (deep copy)
+    // Array<T> operator = (Array<T>& source) {
+    //     m_ptr = new T[source.size];
+    //     for(int i{}; i < source.Size(); i++) {
+    //         m_ptr[i] = source.m_ptr[size];
+    //     }
+    // }
+
+    // Assignment (member-wise swap)
+    // Array<T> operator = (Array<T> source) {
+    //     using namespace std::swap;
+    //     swap(m_ptr, source.m_ptr);
+    //     swap(m_size, source.m_size);
+    // }
