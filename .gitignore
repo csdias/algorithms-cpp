@@ -32,5 +32,4 @@
 *.app
 
 # 
-.\dSYM\*
-.\ArrayTest.dSYM\*
+ArrayTest.dSYM/
