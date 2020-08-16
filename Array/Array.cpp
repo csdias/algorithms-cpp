@@ -29,8 +29,11 @@ class IntArray {
 
     // Constructor to create an array with the given size (element count)
     explicit IntArray (int size) {
-      m_ptr = new int[size] {};
-      m_size = size;
+      assert(size > 0);
+      if (size > 0) {
+        m_ptr = new int[size] {};
+        m_size = size;
+      }
     }
 
     // Copy constructor (deep copy)
@@ -53,7 +56,7 @@ class IntArray {
       return m_size;
     }
 
-    // Overload operator = 
+    // Assignment operator
     // IntArray& operator = (const IntArray& source) {
 
     //   // Prevent self-assignment (x = x)
@@ -71,7 +74,7 @@ class IntArray {
     //   return *this;
     // }
 
-    // Overload operator = (copy swap idiom)
+    // Assignment operator (via copy-and-swap idiom)
     IntArray& operator = (IntArray source){
       swap(*this, source);
       return *this;
@@ -92,16 +95,25 @@ class IntArray {
       return m_ptr[index];
     }
     
-    friend void swap (IntArray&& source) {
-      //m_ptr = source.m_ptr;
-      //m_size = source.m_size;
-      
+    // Move constructor
+    IntArray(IntArray&& source) 
+      // "Steal" the data from source 
+      :m_ptr{source.m_ptr}, m_size{source.m_size} {
+  
+      // Reset source in a safe state
       source.m_ptr = nullptr;
       source.m_size = 0;
     }
 
-    void swap(IntArray& a, IntArray& b){
+    // Swap two array objects (member-wise swap)
+    friend void swap (IntArray& a, IntArray& b) noexcept {
+      using std::swap;
+      swap(a.m_ptr, b.m_ptr);
+      swap(a.m_size, a.m_size);
+    }
 
+    // Swap two array objects (member-wise swap)
+    void swap (IntArray& a, IntArray& b){
       int* ptr{};
       int size{};
 
@@ -117,19 +129,20 @@ class IntArray {
       ptr = nullptr;
     }
 
+    // Destructor
     ~IntArray(){ 
       delete[] m_ptr;
     }
 };
 
-  std::ostream& operator << (std::ostream& os, IntArray& source) {
-    os << "[";
-    for (int i{}; i < source.Size(); i++) {
-      os << source[i] << " ";        
-    }
-    os << "]";
-    return os;
+std::ostream& operator << (std::ostream& os, IntArray& source) {
+  os << "[";
+  for (int i{}; i < source.Size(); i++) {
+    os << source[i] << " ";        
   }
+  os << "]";
+  return os;
+}
 
 int main(int argc, char *argv[]) {
   try {
@@ -151,12 +164,10 @@ int main(int argc, char *argv[]) {
 
     cr = ar;
 
-
-
     br[1] = 4;
 
-    ar.swap(br,ar);
-
+    //ar.swap(br,ar);
+    swap(br,ar);
 
     for(int i{}; i < ar.Size(); i++){
       std::cout << ar[i] << std::endl;

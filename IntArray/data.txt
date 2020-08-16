@@ -1,4 +1,0 @@
-test
-nao apaga
-meutexto
-:wq
