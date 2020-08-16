@@ -23,7 +23,7 @@ class Array {
     int m_size{};
 
     bool IsIndexValid(int index){
-        return (index > 0 && index <= size);
+        return (index > 0 && index <= m_size);
     }
 
     public:
@@ -59,8 +59,8 @@ class Array {
         : m_ptr{source.m_ptr}
         , m_size{source.m_size} {
         // Reset source in a safe state
-        source.m_ptr{nullptr};
-        source.m_size{};
+        source.m_ptr = nullptr;
+        source.m_size = 0;
     }
 
     // Assignment operator (via copy-and-swap idiom)
@@ -70,7 +70,7 @@ class Array {
     }
 
     // Swap two array objects (member-wise swap)
-    friend swap (Array<T>& a, Array<T>& b) noexcept {
+    friend void swap (Array<T>& a, Array<T>& b) noexcept {
         using std::swap;
         swap(a.m_ptr, b.m_ptr);
         swap(b.m_size, b.m_size);
@@ -92,20 +92,12 @@ class Array {
         return m_ptr[index];
     }
 
-    int Size const {
+    int Size() const {
         return m_size;
     }
 
-    bool IsEmpty const {
+    bool IsEmpty() const {
         return m_size == 0;
-    }
-
-    Array<T>& operator [] (int index) {
-        return *m_ptr[index];
-    }
-
-    Array<T> operator [] (int index) const {
-        return *m_ptr[index];
     }
 
     ~Array() {
@@ -117,8 +109,7 @@ class Array {
 // (e.g. cout << ... << myArray << ...)
 template <typename T>
 inline std::ostream& operator << (std::ostream& os, const Array<T> source) {
-    std::ostream os;
-    os << "["
+    os << "[";
     for(int i{}; i < source.Size(); i++) {
         os << source[i] << " ";
     }
@@ -129,17 +120,17 @@ inline std::ostream& operator << (std::ostream& os, const Array<T> source) {
 #endif //ARRAY_HPP_INCLUDED
 
 
-    // Assignment (deep copy)
-    // Array<T> operator = (Array<T>& source) {
-    //     m_ptr = new T[source.size];
-    //     for(int i{}; i < source.Size(); i++) {
-    //         m_ptr[i] = source.m_ptr[size];
-    //     }
-    // }
+// Assignment (deep copy)
+// Array<T> operator = (Array<T>& source) {
+//     m_ptr = new T[source.size];
+//     for(int i{}; i < source.Size(); i++) {
+//         m_ptr[i] = source.m_ptr[size];
+//     }
+// }
 
-    // Assignment (member-wise swap)
-    // Array<T> operator = (Array<T> source) {
-    //     using namespace std::swap;
-    //     swap(m_ptr, source.m_ptr);
-    //     swap(m_size, source.m_size);
-    // }
+// Assignment (member-wise swap)
+// Array<T> operator = (Array<T> source) {
+//     using namespace std::swap;
+//     swap(m_ptr, source.m_ptr);
+//     swap(m_size, source.m_size);
+// }
