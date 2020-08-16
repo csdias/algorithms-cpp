@@ -32,4 +32,4 @@
 *.app
 
 # Debug symbols
-*.dSYM/
+/Array/*.dSYM/
