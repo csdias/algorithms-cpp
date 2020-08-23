@@ -13,7 +13,7 @@
 #include <ostream>      // For std::ostream
 #include <utility>      // For std::swap
 
-class IndexOutOfBoundException {};
+class IndexOutOfBoundsException {};
 
 template<typename T>
 class Array {
@@ -22,20 +22,20 @@ class Array {
     T* m_ptr{nullptr};
     int m_size{};
 
-    bool IsIndexValid(int index){
-        return (index > 0 && index <= m_size);
+    bool IsIndexValid(int index) const {
+        return (index >= 0) && (index < m_size);
     }
 
     public:
 
     // Default constructor
-    Array<T>() = default;
+    Array() = default;
 
     // Shallow copy
     //Array<T>(Array& source) = delete[];
 
     // Constructor to create an array with the given size (element count)
-    explicit Array<T>(int size) {
+    explicit Array(int size) {
         if (size != 0){
             m_ptr = new T[size];
             m_size = size;
@@ -43,8 +43,8 @@ class Array {
     }
 
     // Copy constructor (deep copy)
-    Array<T>(const Array<T>& source) {
-        if (!source.IsEmpty){
+    Array(const Array& source) {
+        if (!source.IsEmpty()){
             m_ptr = new T[source.m_size];
             m_size = source.m_size;
             for(int i{}; i < source.Size(); i++){
@@ -54,7 +54,7 @@ class Array {
     }
 
     // Move constructor
-    Array<T>(Array<T>&& source) 
+    Array(Array&& source) 
         // "Steal" the data from source 
         : m_ptr{source.m_ptr}
         , m_size{source.m_size} {
@@ -64,22 +64,22 @@ class Array {
     }
 
     // Assignment operator (via copy-and-swap idiom)
-    Array<T>& operator = (Array<T> source){
+    Array& operator = (Array source) {
         swap(*this, source);
         return *this;
     }
 
     // Swap two array objects (member-wise swap)
-    friend void swap (Array<T>& a, Array<T>& b) noexcept {
+    friend void swap (Array& a, Array& b) noexcept {
         using std::swap;
         swap(a.m_ptr, b.m_ptr);
-        swap(b.m_size, b.m_size);
+        swap(a.m_size, b.m_size);
     }
     
     // Safe read-only element access with bounds checking
     T operator [] (int index) const {
         if (!IsIndexValid(index)){
-            throw new IndexOutOfBoundException;
+            throw IndexOutOfBoundsException {};
         }
         return m_ptr[index];
     }
@@ -87,7 +87,7 @@ class Array {
     // Safe element access with bounds checking
     T& operator [] (int index) {
         if (!IsIndexValid(index)){
-            throw new IndexOutOfBoundException;
+            throw IndexOutOfBoundsException {};
         }
         return m_ptr[index];
     }
@@ -100,6 +100,62 @@ class Array {
         return m_size == 0;
     }
 
+    int LinearSearch(Array& a, int ini, int end, T value) const {
+        if (ini < -1 || ini > a.Size() || end < -1 || end > a.Size()) {
+            throw IndexOutOfBoundsException {};
+        }
+
+        int index{-1};
+
+        for(int i{ini}; i < end; i++) {
+            if (a[i] == value) {
+                index = i;
+                break;
+            }
+        }
+
+        return index;
+    }
+
+    int BinarySearch(Array& a, T value) const {
+        int index{-1};
+
+        a = a.BubbleSort(a);
+
+        int min{};
+        int max{a.Size()};
+        int med{};
+
+        while(min < max) {
+            med = (max + min) / 2;
+             if (value > a[med]) {
+                min++;
+             }
+             else if (value < a[med]) {
+                 max--;
+             }
+             else if (value == a[med]) {
+                 index = med;
+                 break;
+             }
+        }
+        return index;
+    }
+
+    Array& BubbleSort(Array& a) {
+        T t{};
+        for(int i{}; i < a.Size(); i++) {
+            for(int j{i+1}; j < a.Size();j++) {
+                if (a[i] > a[j]) {
+                    t = a[j];
+                    a[j] = a[i];
+                    a[i] = t;
+                }
+            }
+        }
+        return a;
+    }
+
     ~Array() {
         delete[] m_ptr;
     }
@@ -108,7 +164,7 @@ class Array {
 // Enable idiomatic stream insertion for Array objects
 // (e.g. cout << ... << myArray << ...)
 template <typename T>
-inline std::ostream& operator << (std::ostream& os, const Array<T> source) {
+inline std::ostream& operator << (std::ostream& os, Array<T> source) {
     os << "[";
     for(int i{}; i < source.Size(); i++) {
         os << source[i] << " ";
@@ -121,7 +177,7 @@ inline std::ostream& operator << (std::ostream& os, const Array<T> source) {
 
 
 // Assignment (deep copy)
-// Array<T> operator = (Array<T>& source) {
+// Array operator = (Array& source) {
 //     m_ptr = new T[source.size];
 //     for(int i{}; i < source.Size(); i++) {
 //         m_ptr[i] = source.m_ptr[size];
@@ -129,7 +185,7 @@ inline std::ostream& operator << (std::ostream& os, const Array<T> source) {
 // }
 
 // Assignment (member-wise swap)
-// Array<T> operator = (Array<T> source) {
+// Array operator = (Array source) {
 //     using namespace std::swap;
 //     swap(m_ptr, source.m_ptr);
 //     swap(m_size, source.m_size);
