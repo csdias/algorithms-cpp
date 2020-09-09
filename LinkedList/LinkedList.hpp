@@ -22,6 +22,10 @@ class Node {
     Node(int val) {
         value = val;
     }
+
+    ~Node() {
+        delete next;
+    }
 };
 
 //template<typename T>
