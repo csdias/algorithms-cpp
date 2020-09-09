@@ -13,58 +13,37 @@
 #include <ostream>      // For std::ostream
 #include <utility>      // For std::swap
 
+//template<typename T>
 class Node {
-    private:
-    int m_value{};
-
     public:
-    explicit Node(int value) {
-        m_value = value;
+    int value{};
+    Node* next{nullptr};
+
+    Node(int val) {
+        value = val;
     }
-
-    Node* m_next{}; 
-
-    bool operator == (Node node) const {
-        return (m_value == node.m_value && this == &node);
-    }
-
 };
 
 //template<typename T>
 class LinkedList {
-    private:
-    int m_size {};
-    Node* m_head {};
-
     public:
-    int Size() const {
-        return m_size;
-    }
+    LinkedList() = default;
 
-    bool IsHead(Node& node) {
-        return m_head == &node;
-    }
+    Node* Add(Node* root, int value) {
+        Node* node = new Node(value);
+        if (root == nullptr) {
+            root = node;
+        }
+        else {
+            Node* temp = root;
 
-    Node& Head() {
-        return *m_head;
-    }
-
-    Node& Add(Node& node) {
-        if (m_head == nullptr) {
-            m_head = &node;
-            m_size++;
-            return *m_head;
+            while(temp->next != nullptr){
+                temp = temp->next;
+            };
+            temp->next = node;
         }
 
-        Node node_ = *m_head;
-
-        while(&node_.m_next != nullptr){
-            node_ = node_->m_next;
-        };
-
-        node_->m_next = _node;
-
-        return *m_head;
+        return root;
     }
 };
 

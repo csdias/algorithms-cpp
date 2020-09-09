@@ -1,27 +1,27 @@
 #include "./LinkedList.hpp"
 #include "cassert"
-#include "iostream"
+#include <iostream>
 
 class LinkedListTest {
   public:
     void TestAddingNode() {
-      Node node {9}; 
-      LinkedList list{};
-      list.Add(node);
+      Node* node{nullptr};
+      LinkedList list;
+      node = list.Add(node, 3);
+      node = list.Add(node, 2);
+      node = list.Add(node, 7);
+      node = list.Add(node, 5);
 
-      assert(list.Size() == 1);
+      assert(node->value == 3);
+      assert(node->next->value == 2);
 
-      assert(list.IsHead(node));
+      while(node->next != nullptr){
+        std::cout << node->value << std::endl;
+        node = node->next;
+      }
+      std::cout << node->value << std::endl;
 
-      Node node2 {7}; 
-      list.Add(node2);
-
-      assert(list.Size() == 2);
-
-
-      //assert(list.Head() == node); // Verificar pq nao funcionou
     }
-    
 };
 
 int main(int argc, char *argv[]) {
