@@ -32,7 +32,7 @@ class Array {
     Array() = default;
 
     // Shallow copy
-    //Array<T>(Array& source) = delete[];
+    //Array(Array& source) = delete[];
 
     // Constructor to create an array with the given size (element count)
     explicit Array(int size) {

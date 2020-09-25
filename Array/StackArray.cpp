@@ -6,8 +6,6 @@
 
 #include <iostream>     // For cout
 #include <cassert>      // For assert 
-#include <ostream>      // For std::ostream
-#include <utility>      // For std::swap
 
 template<typename T>
 class AllocaStackArray {
