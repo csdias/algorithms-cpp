@@ -11,6 +11,36 @@ struct TreeNode {
     TreeNode(int _val): left(nullptr), right(nullptr) { val = _val; };
     TreeNode(int _val, TreeNode* _left, TreeNode* _right) { val = _val; left = _left; right = _right; };
 
+    TreeNode* add(TreeNode* root, int val) {
+        if (root->val == 0) {
+            root->val = val;
+            return root;
+        }
+
+        TreeNode* node = root;
+        
+        while ((val < node->val && node->left != nullptr) || (val > node->val && node->right != nullptr)) {
+            if (node->left != nullptr && val < node->val) {
+                node = node->left;
+                continue;
+            }
+
+            if (node->right != nullptr && val > node->val) 
+                node = node->right;
+        }
+
+        TreeNode* newNode = new TreeNode(val);
+
+        if (val < node->val && node->left == nullptr) {
+            node->left = newNode;
+        }
+        else if (val > node->val && node->right == nullptr) {
+            node->right = newNode;
+        }
+
+        return root;
+    }
+
     TreeNode* searchBST(TreeNode* root, int val) {
         TreeNode* foundTree = nullptr;
         TreeNode* leftTree = nullptr;
@@ -18,10 +48,9 @@ struct TreeNode {
         
         if (root->val == val || (root->left == nullptr && root->right == nullptr)) {
             if (root->val == val) {
-                foundTree = root;
+                return root;
             }               
-            
-            return foundTree;
+            return nullptr;
         }
         
         if (root->left != nullptr) {
@@ -47,11 +76,15 @@ struct TreeNode {
 
 int main(int argc, char* argv[]){
 
-    TreeNode tn;
-    TreeNode* t;
-
+    TreeNode* root = new TreeNode();
+    TreeNode tree;
+    root = tree.add(root, 4);
+    root = tree.add(root, 2);
+    root = tree.add(root, 7);    
+    root = tree.add(root, 1);
+    root = tree.add(root, 3);
     //[4,2,7,1,3]
 
-    TreeNode* tree = tn.searchBST(t, 2);
+    root = tree.searchBST(root, 2);
 
 }
