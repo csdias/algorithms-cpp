@@ -49,6 +49,30 @@ class LinkedList {
 
         return root;
     }
+
+    Node* removeElements(Node* head, int val) {    
+        Node* prev = nullptr;
+        Node* curr = head;
+        
+        while(curr) {
+            while(curr->value == val) {                    
+                if (!curr->next) {
+                    if (prev) prev->next = nullptr;
+                    curr = prev;
+                    break;
+                }                    
+                curr->value = curr->next->value;
+                curr->next = curr->next->next;
+            }
+            if (!curr) break;
+            
+            prev = curr;
+            curr = curr->next;
+        }
+        
+        return (!prev?curr:head);
+    }
+
 };
 
 
